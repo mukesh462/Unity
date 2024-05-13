@@ -61,3 +61,8 @@ $('#left-menu li.has-sub > a').click(function () {
         $submenu.css('height', 0);
     }
 });
+$("#myTable").DataTable({
+    responsive: true,
+    searching: false,
+    ordering: false
+});
