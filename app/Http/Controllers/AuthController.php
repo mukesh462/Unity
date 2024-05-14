@@ -45,8 +45,6 @@ class AuthController extends Controller
         $allMenu = AdminMenu::all();
         return view('layouts.menu', compact('allMenu'));
     }
-
-
     public function menuform(Request $request)
     {
         if ($request->id) {
@@ -58,12 +56,12 @@ class AuthController extends Controller
     }
     public function menu_save(Request $request)
     {
-
         $validatedData = $request->validate([
             'menu_name' => 'required',
             'url' => 'required',
-        ]);
+            'menu_type' => 'required',
 
+        ]);
         if ($request->menu_id) {
             $formData = AdminMenu::where('id', $request->menu_id);
             $formData->update($validatedData);
@@ -82,5 +80,10 @@ class AuthController extends Controller
 
 
         return redirect()->route('menu');
+    }
+    public function listmenu()
+    {
+        $allMenu = AdminMenu::all();
+        return view('layouts.list', compact('allMenu'));
     }
 }

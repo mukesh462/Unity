@@ -8,20 +8,42 @@
         <span class="small-logo">S!M</span>
     </div>
     <div id="left-menu">
+        @php
+            $getUser = auth()->user();
+
+            if ($getUser->user_type == 1) {
+                $menus = \App\Models\AdminMenu::where('menu_type', 1)->get();
+            } else {
+                $menus = \App\Models\AdminMenu::where('menu_type', 1)
+                    ->whereIn('id', json_decode($getUser->access_menu))
+
+                    ->get();
+            }
+        @endphp
         <ul>
             <li class="active"><a href="#">
                     <i class="ion-ios-person-outline"></i>
                     <span>Dashboard</span>
                 </a></li>
+            @foreach ($menus as $menu)
+                <li>
+                    <a href="{{ url($menu->url) }}">
+                        <i class="ion-ios-person-outline"></i>
+                        <span>{{ $menu->menu_name }}</span>
+                    </a>
+                </li>
+            @endforeach
+
             <li class=""><a href="{{ route('menu') }}">
                     <i class="ion-android-menu"></i>
                     <span>Admin Menu</span>
                 </a></li>
+
+
+
             <li class="has-sub">
-                <a href="#">
-                    <i class="ion-ios-person-outline"></i>
-                    <span>UI Elements</span>
-                </a>
+
+
                 <ul>
                     <li><a href="#">UI Elements Item 1</a></li>
                     <li><a href="#">UI Elements Item 2</a></li>
@@ -43,7 +65,7 @@
                             <img style="object-fit: cover"
                                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlfGbpGndfQmn_5PkAuiifyKRhDRL_GBSop4dxBhwMTydCQinEAsFspOG_hRogwXQeqDI&usqp=CAU"
                                 width="40" height="40" class="rounded-circle" alt="">
-                            <span class="ms-2">Super Admin</span>
+                            <span class="ms-2 text-uppercase"> {{ auth()->user()->first_name }}</span>
                         </button>
                         <ul class="dropdown-menu">
 
