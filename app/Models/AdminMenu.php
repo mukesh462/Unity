@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class AdminMenu extends Model
 {
     use HasFactory;
-    protected $fillable = ['menu_name', 'url'];
+    protected $fillable = ['menu_name', 'url', 'menu_type'];
 }
