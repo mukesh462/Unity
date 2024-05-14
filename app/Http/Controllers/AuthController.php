@@ -6,6 +6,7 @@ use App\Models\AdminMenu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -43,5 +44,43 @@ class AuthController extends Controller
     {
         $allMenu = AdminMenu::all();
         return view('layouts.menu', compact('allMenu'));
+    }
+
+
+    public function menuform(Request $request)
+    {
+        if ($request->id) {
+            $data = AdminMenu::where('id', $request->id)->first();
+        } else {
+            $data = '';
+        }
+        return view('layouts.MenuForm', compact('data'));
+    }
+    public function menu_save(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'menu_name' => 'required',
+            'url' => 'required',
+        ]);
+
+        if ($request->menu_id) {
+            $formData = AdminMenu::where('id', $request->menu_id);
+            $formData->update($validatedData);
+        } else {
+
+            AdminMenu::create($validatedData);
+        }
+
+
+        return redirect()->route('menu');
+    }
+    public function deleteFormData($id)
+    {
+
+        AdminMenu::where('id', $id)->delete();
+
+
+        return redirect()->route('menu');
     }
 }

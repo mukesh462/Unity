@@ -14,4 +14,8 @@ Route::middleware(['auth.verify'])->group(function () {
         return view('layouts.Dashboard');
     });
     Route::get('adminMenu', [AuthController::class, 'adminMenu'])->name('menu');
+    Route::get('menuform', [AuthController::class, 'menuform'])->name('menu.form');
+    Route::post('menu_save', [AuthController::class, 'menu_save'])->name('menu.save');
+    Route::get('menu/{id}/edit', [AuthController::class, 'menuform'])->name('menu.edit');
+    Route::get('menu/{id}/delete', [AuthController::class, 'deleteFormData'])->name('menu.delete');
 });
