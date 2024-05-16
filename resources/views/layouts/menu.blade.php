@@ -1,6 +1,7 @@
 @extends('layouts.header')
 @section('maincontent')
     <section class="section">
+        <h1>Admin Menu</h1>
         <div class="row">
             <div class="col-lg-12">
 

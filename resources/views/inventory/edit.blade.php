@@ -1,7 +1,11 @@
 @extends('layouts.header')
 @section('maincontent')
     <div class="">
-    <div style="display:flex; flex-direction: row; justify-content: space-between;" class="mt-5 mb-4"> <h1>Inventory Edit</h1><div style="display: flex;align-items: center;justify-content: center;"><a href="{{ route('items.index') }}"  class="btn btn-info">Back</a></div></div>
+        <div style="display:flex; flex-direction: row; justify-content: space-between;" class="mt-5 mb-4">
+            <h1>Inventory Edit</h1>
+            <div style="display: flex;align-items: center;justify-content: center;"><a href="{{ route('items.index') }}"
+                    class="btn btn-info">Back</a></div>
+        </div>
         <form action="{{ route('items.update', $item->id) }}" method="POST">
             @csrf
             @method('PUT')
@@ -19,9 +23,10 @@
             </div>
             <div class="form-group">
                 <label for="quantity_in_stock">Quantity:</label>
-                <input type="text" class="form-control" id="quantity_in_stock" name="quantity_in_stock" value="{{ $item->quantity_in_stock }}">
+                <input type="text" class="form-control" id="quantity_in_stock" name="quantity_in_stock"
+                    value="{{ $item->quantity_in_stock }}">
             </div>
-            <button type="submit" class="btn btn-success">Update</button>
+            <button type="submit" class="btn btn-success mt-2">Update</button>
         </form>
     </div>
 @endsection

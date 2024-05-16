@@ -4,8 +4,8 @@
 
 @section('content')
     <div id="logo">
-        <span class="big-logo">.S!mple</span>
-        <span class="small-logo">S!M</span>
+        <span class="big-logo">Admin Panel</span>
+        <span class="small-logo">Admin</span>
     </div>
     <div id="left-menu">
         @php
@@ -21,27 +21,26 @@
             }
         @endphp
         <ul>
-            <li class="active"><a href="#">
+            <li class="active"><a href="/">
                     <i class="ion-ios-person-outline"></i>
                     <span>Dashboard</span>
                 </a></li>
             @foreach ($menus as $menu)
                 <li>
                     <a href="{{ url($menu->url) }}">
-                        <i class="ion-ios-person-outline"></i>
+                        <i class="ion-android-menu"></i>
                         <span>{{ $menu->menu_name }}</span>
                     </a>
                 </li>
             @endforeach
+            @if ($getUser->user_type == 1)
+                <li class=""><a href="{{ route('menu') }}">
+                        <i class="ion-android-menu"></i>
+                        <span>Admin Menu</span>
+                    </a></li>
+            @endif
 
-            <li class=""><a href="{{ route('menu') }}">
-                    <i class="ion-android-menu"></i>
-                    <span>Admin Menu</span>
-                </a></li>
-
-
-
-            <li class="has-sub">
+            {{-- <li class="has-sub">
 
 
                 <ul>
@@ -49,7 +48,7 @@
                     <li><a href="#">UI Elements Item 2</a></li>
                     <li><a href="#">UI Elements Item 3</a></li>
                 </ul>
-            </li>
+            </li> --}}
 
 
         </ul>

@@ -17,12 +17,12 @@ Route::middleware(['auth.verify', 'user_access'])->group(function () {
     Route::get('menu/view', [AuthController::class, 'adminMenu'])->name('menu');
     Route::get('menu/create', [AuthController::class, 'menuform'])->name('menu.form');
     Route::post('menu_save', [AuthController::class, 'menu_save'])->name('menu.save');
-    Route::get('menu/{id}/edit', [AuthController::class, 'menuform'])->name('menu.edit');
-    Route::get('menu/{id}/delete', [AuthController::class, 'deleteFormData'])->name('menu.delete');
+    // Route::get('menu/{id}/edit', [AuthController::class, 'menuform'])->name('menu.edit');
+    // Route::get('menu/{id}/delete', [AuthController::class, 'deleteFormData'])->name('menu.delete');
     Route::get('items/view', [InventoryController::class, 'index'])->name('items.index');
     Route::get('items/edit/{item}', [InventoryController::class, 'edit'])->name('items.edit');
     Route::put('items/{item}', [InventoryController::class, 'update'])->name('items.update');
-    Route::delete('items/delete/{item}', [InventoryController::class, 'destroy'])->name('items.destroy');
+    Route::get('items/delete/{item}', [InventoryController::class, 'destroy'])->name('items.destroy');
     Route::get('/items/create', [InventoryController::class, 'create'])->name('items.create');
     Route::post('/items/add', [InventoryController::class, 'store'])->name('items.store');
     Route::get('/itemhistory/{item}', [InventoryController::class, 'showHistory'])->name('items.history');

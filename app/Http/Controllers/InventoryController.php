@@ -6,11 +6,13 @@ use App\Models\AdminUser;
 use Illuminate\Http\Request;
 use App\Models\InventoryItem;
 use App\Models\InventoryItemHistory;
+use Illuminate\Support\Facades\Session;
 
 class InventoryController extends Controller
 {
     //
-    public function index(){
+    public function index()
+    {
         $items = InventoryItem::orderBy('id', 'asc')->get();
         return view('inventory.itemview', compact('items'));
     }
@@ -24,14 +26,20 @@ class InventoryController extends Controller
         $item->update($request->all());
 
         $history = new InventoryItemHistory();
-        $history->user_id = 1;
-        $history->user_type = 2;
+        $user = auth()->user();
+        $history->user_id = $user->id;
+        $history->user_type = $user->user_type;
         $history->item_id = $item->id;
         $history->ref_type = "ItemUpdate";
         $history->note = "User Update the Inventory Item";
         $history->status = 1;
         $history->save();
-        
+        $toast =  [
+            'type' => 'success',
+            'message' => 'updated Successfully'
+        ];
+        Session::put('toast', $toast);
+
         return redirect()->route('items.index')->with('success', 'Item updated successfully.');
     }
 
@@ -40,15 +48,21 @@ class InventoryController extends Controller
         // $item->delete();
         $item = InventoryItem::where('id', $item->id)->first();
         $item->status = 0;
-        $item->save();
+        $user = auth()->user();
         $history = new InventoryItemHistory();
-        $history->user_id = 1;
-        $history->user_type = 2;
+        $history->user_id = $user->id;
+        $history->user_type = $user->user_type;
         $history->item_id = $item->id;
         $history->ref_type = "ItemDelete";
         $history->note = "User Delete the Inventory Item";
         $history->status = 1;
         $history->save();
+        $item->delete();
+        $toast =  [
+            'type' => 'success',
+            'message' => 'deleted Successfully'
+        ];
+        Session::put('toast', $toast);
         return redirect()->route('items.index')->with('success', 'Item deleted successfully.');
     }
     public function create()
@@ -71,27 +85,36 @@ class InventoryController extends Controller
         $item->price = $validatedData['price'];
         $item->quantity_in_stock = $validatedData['quantity_in_stock'];
         $item->save();
-
         $history = new InventoryItemHistory();
-        $history->user_id = 1;
-        $history->user_type = 2;
+        $user = auth()->user();
+        $history->user_id = $user->id;
+        $history->user_type = $user->user_type;
         $history->item_id = $item->id;
         $history->ref_type = "ItemCreate";
         $history->note = "User Create a New Inventory Item";
         $history->status = 1;
         $history->save();
-
+        $toast =  [
+            'type' => 'success',
+            'message' => 'added Successfully'
+        ];
+        Session::put('toast', $toast);
         return redirect()->route('items.index')->with('success', 'Item created successfully.');
     }
-    public function showHistory(InventoryItem $item){
+    public function showHistory(InventoryItem $item)
+    {
         $data = InventoryItemHistory::where('item_id', $item['id'])
-            ->leftJoin('inventory_items', 'inventory_items.id', 'inventory_item_histories.item_id')->select("inventory_item_histories.*", 'inventory_items.name')->get();
-            // return $data;
+            ->leftJoin('inventory_items', 'inventory_items.id', 'inventory_item_histories.item_id')
+            ->leftJoin('admin_users', 'admin_users.id', 'inventory_item_histories.user_id')
+            ->select("inventory_item_histories.*", 'inventory_items.name', 'admin_users.first_name')->get();
+
+        // return $data;
         return view('inventory.history', compact('data'));
     }
 
     // Sub Admin --- 
-    public function subAdminList(){
+    public function subAdminList()
+    {
         $users = AdminUser::where('user_type', 2)->orderBy('id', 'asc')->get();
         return view('subadmin.subAdminList', compact('users'));
     }
