@@ -6,6 +6,7 @@ use App\Models\AdminUser;
 use Illuminate\Http\Request;
 use App\Models\InventoryItem;
 use App\Models\InventoryItemHistory;
+use Illuminate\Support\Facades\Hash;
 
 class InventoryController extends Controller
 {
@@ -99,5 +100,29 @@ class InventoryController extends Controller
     {
         $data = '';
         return view('subadmin.subAdminCreate', compact('data'));
+    }
+    public function subadmin_save(Request $request)
+    {
+        $validatedData = $request->validate([
+            'first_name' => 'required',
+            'dob' => 'required',
+            'mobile' => 'required',
+            'user_name' => 'required',
+            'password' => 'required',
+
+        ]);
+        if ($request->subadmin_id) {
+            $formData = AdminUser::where('id', $request->subadmin_id);
+
+            $formData->update($validatedData);
+        } else {
+            $validatedData['password'] = Hash::make($validatedData['password']);
+            $validatedData['username'] = $validatedData['user_name'];
+            $validatedData['user_type'] = 2;
+            AdminUser::create($validatedData);
+        }
+
+
+        return redirect()->route('subAdmin.list');
     }
 }
