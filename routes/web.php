@@ -26,14 +26,16 @@ Route::middleware(['auth.verify', 'user_access'])->group(function () {
     Route::get('/items/create', [InventoryController::class, 'create'])->name('items.create');
     Route::post('/items/add', [InventoryController::class, 'store'])->name('items.store');
     Route::get('/itemhistory/{item}', [InventoryController::class, 'showHistory'])->name('items.history');
-    Route::get('/subAdminList', [InventoryController::class, 'subAdminList'])->name('subAdmin.list');
-    Route::get('/subAdmin/create', [InventoryController::class, 'subAdminCreate'])->name('subAdmin.create');
+    Route::get('users/view', [InventoryController::class, 'subAdminList'])->name('subAdmin.list');
+  
+    Route::get('users/create', [InventoryController::class, 'subAdminCreate'])->name('subAdmin.create');
     Route::post('subAdmin_save', [InventoryController::class, 'subAdmin_save'])->name('subAdmin.save');
     Route::get('menu/edit/{id}', [AuthController::class, 'menuform'])->name('menu.edit');
     Route::get('menu/delete/{id}', [AuthController::class, 'deleteFormData'])->name('menu.delete');
-    Route::get('list/view', [AuthController::class, 'listmenu'])->name('list');
-    Route::get('list/create', [AuthController::class, 'menuform'])->name('list.form');
-    Route::post('list_save', [AuthController::class, 'menu_save'])->name('list.save');
-    Route::get('list/edit/{id}', [AuthController::class, 'menuform'])->name('list.edit');
-    Route::get('list/delete/{id}', [AuthController::class, 'deleteFormData'])->name('list.delete');
+    // Route::get('list/view', [AuthController::class, 'listmenu'])->name('list');
+    // Route::get('list/create', [AuthController::class, 'menuform'])->name('list.form');
+    // Route::post('list_save', [AuthController::class, 'menu_save'])->name('list.save');
+    // Route::get('list/edit/{id}', [AuthController::class, 'menuform'])->name('list.edit');
+    // Route::get('list/delete/{id}', [AuthController::class, 'deleteFormData'])->name('list.delete');
 });
+Route::get('items/pdf', [InventoryController::class, 'exportPdf'])->name('exportPdf');

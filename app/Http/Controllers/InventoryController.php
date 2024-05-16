@@ -6,6 +6,7 @@ use App\Models\AdminUser;
 use Illuminate\Http\Request;
 use App\Models\InventoryItem;
 use App\Models\InventoryItemHistory;
+use Dompdf\Dompdf;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 
@@ -147,5 +148,14 @@ class InventoryController extends Controller
 
 
         return redirect()->route('subAdmin.list');
+    }
+    function exportPdf()
+    {
+        $dompdf = new Dompdf();
+        $items = InventoryItem::orderBy('id', 'desc')->get();
+        $html = view('inventory.inventoryPdf', compact('items'));
+        $dompdf->load_html($html);
+        $dompdf->setPaper('A4', 'portrait');
+        return  $dompdf->render('stream.pdf');
     }
 }

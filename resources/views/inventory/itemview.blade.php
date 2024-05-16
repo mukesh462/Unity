@@ -3,11 +3,19 @@
     <div class="">
         <div style="display:flex; flex-direction: row; justify-content: space-between;" class="mt-5 mb-4">
             <h1>Inventory List</h1>
-            @if (user_access('items/create'))
+            <div class="d-flex gap-3">
+                @if (user_access('items/create'))
+                    <div style="display: flex;align-items: center;justify-content: center;">
+                        <a href="{{ route('items.create') }}" class="btn btn-success btn-sm">Add New Inventory</a>
+                    </div>
+                @endif
                 <div style="display: flex;align-items: center;justify-content: center;">
-                    <a href="{{ route('items.create') }}" class="btn btn-success">Add New Inventory</a>
+                    <a href="{{ route('items.create') }}" class="btn btn-sm btn-info"> <i class="fa-solid fa-file-pdf"></i>
+                        Pdf</a>
                 </div>
-            @endif
+
+
+            </div>
 
         </div>
         <table class="table" id="myTable">
