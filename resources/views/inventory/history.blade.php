@@ -12,7 +12,7 @@
                     <th>ID</th>
                     <th>User Name</th>
                     <th>User Type</th>
-                    <th>Inventory Name</th>
+                    <th>Inventory Product Name</th>
                     <th>Ref Type</th>
                     <th>Notes</th>
                     <th>Date </th>

@@ -1,6 +1,6 @@
 @extends('layouts.header')
 @section('maincontent')
-<style>
+    <style>
         .form-select {
             width: 100%;
             padding: 8px;
@@ -50,8 +50,8 @@
             background: #b3b3b3;
         }
     </style>
-    <div class="  mt-5 p-5">
-        <h1>Sub Admin Create</h1>
+    <div class="  mt-1 p-5">
+        <h1>Sub Admin Form</h1>
         <button class="btn btn-primary my-3"><a href="{{ route('subAdmin.list') }}" class="text-decoration-none text-white">
                 <i class="fa-solid fa-arrow-left"></i> Back
             </a> </button>
@@ -63,18 +63,7 @@
         <form action="{{ route('subAdmin.save') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                {{-- <div class=" col-md-6">
-                    <label for="">Select Menu</label>
-                    <select name="parent_id" id="" class="form-select">
-                        <option value="0" @if (is_object($data) && $data->parent_id == 0) selected @endif>
-                            Root</option>
-                        @foreach ($m_data as $menu)
-                            <option value="{{ $menu->id }}" >
-                            <!-- <option value="{{ $menu->id }}" @if ($data->parent_id == $menu->id) selected @endif> -->
-                                {{ $menu->name }}</option>
-                        @endforeach
-                    </select>
-                </div> --}}
+
                 <div class=" col-md-6">
                     <label for="first_name">First name</label>
                     <input type="text" class="form-control" id="first_name" name="first_name"
@@ -116,8 +105,8 @@
                         value="{{ is_object($data) ? $data->pincode : old('pincode') }}">
                 </div>
                 <div class=" col-md-6">
-                    <label for="username">user_name</label>
-                    <input type="text" class="form-control" id="username" name="username"
+                    <label for="username">User name</label>
+                    <input type="email" class="form-control" id="username" name="username" required
                         value="{{ is_object($data) ? $data->username : old('username') }}">
                 </div>
                 <div class=" col-md-6">
@@ -125,28 +114,20 @@
                     <input type="text" class="form-control" id="password" name="password"
                         value="{{ is_object($data) ? $data->password : old('password') }}">
                 </div>
-                <!-- <div class=" col-md-6">
-                    <label for="">Select Menu</label>
-                    <select name="menu_id" id="" class="form-select">
-                        @foreach ($m_data as $menu)
-                            <option value="{{ $menu->id }}" >
-                                {{ $menu->name }}</option>
-                        @endforeach
-                    </select>
-                </div> -->
-                <div class="col-md-6">
+
+                <div class="col-md-6 mt-3">
                     <label for="menu_select">Select Menu</label>
                     <select name="access_menu[]" id="menu_select" class="form-select" multiple>
-        <!-- <option value="0" @if (is_object($data) && $data->parent_id == 0) selected @endif>
-            Root</option> -->
+                        <!-- <option value="0" @if (is_object($data) && $data->parent_id == 0) selected @endif>
+                                                                        Root</option> -->
                         @foreach ($m_data as $menu)
-                             <option value="{{ $menu->id }}">
+                            <option value="{{ $menu->id }}" @if (is_object($data) && in_array($menu->id, json_decode($data->access_menu))) selected @endif>
                                 <!-- {{ $menu->name }} -->
-                                @if (is_object($data) && in_array($menu->id, json_decode($data->access_menu))) selected @endif>
-                    {{ $menu->name }}
+
+                                {{ $menu->name }}
                             </option>
-                         @endforeach
-                     </select>
+                        @endforeach
+                    </select>
                 </div>
 
             </div>

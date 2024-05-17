@@ -65,4 +65,8 @@ $("#myTable").DataTable({
     responsive: true,
     searching: false,
     ordering: false
+}); $("#myTableSearch").DataTable({
+    responsive: true,
+    searching: false,
+    ordering: false
 });

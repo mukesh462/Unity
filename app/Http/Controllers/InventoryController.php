@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Export\ProductExport;
 use App\Models\AdminUser;
 use Illuminate\Http\Request;
 use App\Models\InventoryItem;
 use App\Models\InventoryItemHistory;
-use Dompdf\Dompdf;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class InventoryController extends Controller
 {
@@ -65,7 +67,18 @@ class InventoryController extends Controller
             'message' => 'deleted Successfully'
         ];
         Session::put('toast', $toast);
-        return redirect()->route('items.index')->with('success', 'Item deleted successfully.');
+        return redirect()->route('items.index');
+    }
+    public function userDestroy(AdminUser $item)
+    {
+
+        $item->delete();
+        $toast =  [
+            'type' => 'success',
+            'message' => 'deleted Successfully'
+        ];
+        Session::put('toast', $toast);
+        return redirect()->route('subAdmin.list');
     }
     public function create()
     {
@@ -122,9 +135,9 @@ class InventoryController extends Controller
     }
     public function subAdminCreate(Request $request)
     {
-        if ($request->id){
+        if ($request->id) {
             $data = AdminUser::where('id', $request->id)->first();
-        }else {
+        } else {
             $data = '';
         }
         return view('subadmin.subAdminCreate', compact('data'));
@@ -154,20 +167,46 @@ class InventoryController extends Controller
             $validatedData['city'] = isset($request->city) && $request->city  != "" ? $request->city  : null;
             $validatedData['state'] = isset($request->state) && $request->state  != "" ? $request->state  : null;
             $validatedData['pincode'] = isset($request->pincode) && $request->pincode  != "" ? $request->pincode  : null;
-            
+
             AdminUser::create($validatedData);
         }
-
+        $toast =  [
+            'type' => 'success',
+            'message' => 'Saved Successfully'
+        ];
+        Session::put('toast', $toast);
 
         return redirect()->route('subAdmin.list');
     }
     function exportPdf()
     {
-        $dompdf = new Dompdf();
-        $items = InventoryItem::orderBy('id', 'desc')->get();
-        $html = view('inventory.inventoryPdf', compact('items'));
-        $dompdf->load_html($html);
-        $dompdf->setPaper('A4', 'portrait');
-        return  $dompdf->render('stream.pdf');
+        // $dompdf = new Dompdf();
+        $items = InventoryItem::orderBy('id', 'asc')->get();
+        // $html = view('inventory.inventoryPdf', compact('items'))->render();
+        // $dompdf->loadHtml($html);
+        // $dompdf->setPaper('A4', 'portrait');
+        $pdf = PDF::loadView('inventory.inventoryPdf', compact('items'));
+
+        $headers = [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="indexmember.pdf"',
+        ];
+        return  $pdf->download('inventory.pdf');
+    }
+    public function exportExcel()
+    {
+        return Excel::download(new ProductExport, 'invoices.xlsx');
+    }
+    public function productSearch(Request $request)
+    {
+        $current_user = InventoryItem::whereRaw('LOWER(name) LIKE ?', ["%{$request->q}%"])->orderbydesc('id')->get();
+        if ($current_user->isEmpty()) {
+            return response()->json(['message' => 'No items found'], 404);
+        }
+        return response()->json(['data' => $current_user]);
+    }
+    public function productSearchView(Request $request)
+    {
+        return view('inventory.search');
     }
 }
