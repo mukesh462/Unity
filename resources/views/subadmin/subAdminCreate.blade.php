@@ -1,8 +1,58 @@
 @extends('layouts.header')
 @section('maincontent')
+<style>
+        .form-select {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f9fa;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #80bdff;
+            box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
+        }
+
+        .form-select option {
+            padding: 8px;
+            background-color: #fff;
+        }
+
+        .form-select option:hover {
+            background-color: #e9ecef;
+        }
+
+        /* Custom style for selected options */
+        .form-select option:checked {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* Add styles for multiple select's scrollbar for better UX */
+        .form-select::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .form-select::-webkit-scrollbar-track {
+            background: #f8f9fa;
+        }
+
+        .form-select::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 4px;
+        }
+
+        .form-select::-webkit-scrollbar-thumb:hover {
+            background: #b3b3b3;
+        }
+    </style>
     <div class="  mt-5 p-5">
         <h1>Sub Admin Create</h1>
-        <button class="btn btn-primary my-3"><a href="{{ route('menu') }}" class="text-decoration-none text-white">
+        <button class="btn btn-primary my-3"><a href="{{ route('subAdmin.list') }}" class="text-decoration-none text-white">
                 <i class="fa-solid fa-arrow-left"></i> Back
             </a> </button>
 
@@ -66,30 +116,42 @@
                         value="{{ is_object($data) ? $data->pincode : old('pincode') }}">
                 </div>
                 <div class=" col-md-6">
-                    <label for="user_name">user_name</label>
-                    <input type="text" class="form-control" id="user_name" name="user_name"
-                        value="{{ is_object($data) ? $data->user_name : old('user_name') }}">
+                    <label for="username">user_name</label>
+                    <input type="text" class="form-control" id="username" name="username"
+                        value="{{ is_object($data) ? $data->username : old('username') }}">
                 </div>
                 <div class=" col-md-6">
                     <label for="password">password</label>
                     <input type="text" class="form-control" id="password" name="password"
                         value="{{ is_object($data) ? $data->password : old('password') }}">
                 </div>
-                <div class=" col-md-6">
+                <!-- <div class=" col-md-6">
                     <label for="">Select Menu</label>
-                    <select name="parent_id" id="" class="form-select">
-                        <!-- <option value="0" @if (is_object($data) && $data->parent_id == 0) selected @endif>
-                            Root</option> -->
+                    <select name="menu_id" id="" class="form-select">
                         @foreach ($m_data as $menu)
                             <option value="{{ $menu->id }}" >
                                 {{ $menu->name }}</option>
                         @endforeach
                     </select>
+                </div> -->
+                <div class="col-md-6">
+                    <label for="menu_select">Select Menu</label>
+                    <select name="access_menu[]" id="menu_select" class="form-select" multiple>
+        <!-- <option value="0" @if (is_object($data) && $data->parent_id == 0) selected @endif>
+            Root</option> -->
+                        @foreach ($m_data as $menu)
+                             <option value="{{ $menu->id }}">
+                                <!-- {{ $menu->name }} -->
+                                @if (is_object($data) && in_array($menu->id, json_decode($data->access_menu))) selected @endif>
+                    {{ $menu->name }}
+                            </option>
+                         @endforeach
+                     </select>
                 </div>
 
             </div>
             @if (is_object($data))
-                <input type="hidden" name="menu_id" value="{{ $data->id }}">
+                <input type="hidden" name="user_id" value="{{ $data->id }}">
             @endif
 
             <button type="submit"

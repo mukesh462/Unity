@@ -120,29 +120,41 @@ class InventoryController extends Controller
         $users = AdminUser::where('user_type', 2)->orderBy('id', 'asc')->get();
         return view('subadmin.subAdminList', compact('users'));
     }
-    public function subAdminCreate()
+    public function subAdminCreate(Request $request)
     {
-        $data = '';
+        if ($request->id){
+            $data = AdminUser::where('id', $request->id)->first();
+        }else {
+            $data = '';
+        }
         return view('subadmin.subAdminCreate', compact('data'));
     }
     public function subadmin_save(Request $request)
     {
+        // return $request->user_id;
         $validatedData = $request->validate([
             'first_name' => 'required',
             'dob' => 'required',
             'mobile' => 'required',
-            'user_name' => 'required',
+            'username' => 'required',
             'password' => 'required',
-
+            'access_menu' => 'required',
         ]);
-        if ($request->subadmin_id) {
-            $formData = AdminUser::where('id', $request->subadmin_id);
-
+        if ($request->user_id) {
+            $formData = AdminUser::where('id', $request->user_id);
+            $validatedData['access_menu'] = json_encode($validatedData['access_menu']);
             $formData->update($validatedData);
         } else {
             $validatedData['password'] = Hash::make($validatedData['password']);
-            $validatedData['username'] = $validatedData['user_name'];
+            $validatedData['username'] = $validatedData['username'];
             $validatedData['user_type'] = 2;
+            $validatedData['access_menu'] = json_encode($validatedData['access_menu']);
+            $validatedData['last_name'] = isset($request->last_name) && $request->last_name  != "" ? $request->last_name  : null;
+            $validatedData['address'] = isset($request->address) && $request->address  != "" ? $request->address  : null;
+            $validatedData['city'] = isset($request->city) && $request->city  != "" ? $request->city  : null;
+            $validatedData['state'] = isset($request->state) && $request->state  != "" ? $request->state  : null;
+            $validatedData['pincode'] = isset($request->pincode) && $request->pincode  != "" ? $request->pincode  : null;
+            
             AdminUser::create($validatedData);
         }
 

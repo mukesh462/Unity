@@ -29,6 +29,7 @@ Route::middleware(['auth.verify', 'user_access'])->group(function () {
     Route::get('users/view', [InventoryController::class, 'subAdminList'])->name('subAdmin.list');
   
     Route::get('users/create', [InventoryController::class, 'subAdminCreate'])->name('subAdmin.create');
+    Route::get('users/edit/{id}', [InventoryController::class, 'subAdminCreate'])->name('subAdmin.edit');
     Route::post('subAdmin_save', [InventoryController::class, 'subAdmin_save'])->name('subAdmin.save');
     Route::get('menu/edit/{id}', [AuthController::class, 'menuform'])->name('menu.edit');
     Route::get('menu/delete/{id}', [AuthController::class, 'deleteFormData'])->name('menu.delete');
